@@ -11,7 +11,7 @@ import pytz
 import requests
 from django.db import transaction
 
-from finalproject.projectapp.models import LearningPath
+from projectapp.models import LearningPath
 from projectarch.domain.model import DomainLearningPath
 
 
@@ -34,9 +34,8 @@ class AddPathCommand(Command):
     def __init__(self, now: PythonTimeStampProvider = PythonTimeStampProvider()):
         self.now = now
 
-    def execute(self, data: DomainLearningPath, timestamp=None):
+    def execute(self, data: DomainLearningPath):
         learningpath = LearningPath(data.id, data.title, data.duration)
-        learningpath.timestamp = self.now
 
         with transaction.atomic():
             learningpath.save()

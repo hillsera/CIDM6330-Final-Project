@@ -8,7 +8,7 @@ class DomainLearningPath:
     LearningPath domain model.
     """
 
-    def __init__(self, id, title, duration, progress=0):
+    def __init__(self, id, title, duration, progress):
         self.id = id
         self.title = title
         self.duration = duration

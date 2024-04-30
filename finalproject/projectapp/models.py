@@ -7,7 +7,7 @@ from projectarch.domain.model import DomainLearningPath
 class LearningPath(models.Model):
     id = models.IntegerField(primary_key=True)
     title = models.CharField(max_length=300)
-    duration = models.IntegerField()
+    duration = models.IntegerField(default=1000)
     progress = models.IntegerField(default=0)  # Add progress field
 
     def __str__(self):
@@ -44,5 +44,5 @@ class LearningPath(models.Model):
             id=self.id,
             title=self.title,
             duration=self.duration,
-            progress=self.progress
+            progress=self.progress,
         )

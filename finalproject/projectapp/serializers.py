@@ -5,7 +5,7 @@ from rest_framework import serializers
 class LearningPathSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = LearningPath
-        fields = ("id", "title", "progress", "date")
+        fields = ("id", "title", "duration", "progress")
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
