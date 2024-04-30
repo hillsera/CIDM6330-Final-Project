@@ -28,3 +28,14 @@ class TestCommands(TestCase):
 
         self.assertEqual(LearningPath.objects.count(), 1)
         self.assertEqual(LearningPath.objects.get(id=1).title, self.domain_path_1.title)
+
+class TestDomainLearningPath(TestCase):
+    def test_watch_updates_progress(self):
+        # Create a DomainLearningPath instance for testing
+        learning_path = DomainLearningPath(id=1, title="Test Learning Path", duration=3, progress=0)
+
+        # Call the watch method
+        learning_path.watch()
+
+        # Check if the progress is updated correctly
+        self.assertLessEqual(learning_path.progress, learning_path.duration)
