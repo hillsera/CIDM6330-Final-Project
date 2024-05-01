@@ -39,3 +39,14 @@ class AddPathCommand(Command):
 
         with transaction.atomic():
             learningpath.save()
+
+class ListLearningPathCommand(Command):
+    """
+    swapping in Django ORM for the database manager
+    """
+
+    def __init__(self, order_by="id"):
+        self.order_by = order_by
+
+    def execute(self):
+        return LearningPath.objects.all().order_by(self.order_by)
