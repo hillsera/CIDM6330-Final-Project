@@ -32,3 +32,6 @@ class LearningPathAPITest(APITestCase):
         self.assertEqual(learning_path.title, self.learning_path_data['title'])
         self.assertEqual(learning_path.duration, self.learning_path_data['duration'])
         self.assertEqual(learning_path.progress, self.learning_path_data['progress'])
+
+    
+    

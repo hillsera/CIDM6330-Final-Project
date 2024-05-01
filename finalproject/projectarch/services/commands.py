@@ -39,5 +39,3 @@ class AddPathCommand(Command):
 
         with transaction.atomic():
             learningpath.save()
-
-

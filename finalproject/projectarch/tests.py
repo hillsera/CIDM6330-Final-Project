@@ -6,7 +6,8 @@ from django.utils.timezone import localtime
 from projectapp.models import LearningPath
 from projectarch.domain.model import DomainLearningPath
 from projectarch.services.commands import (
-    AddPathCommand
+    AddPathCommand,
+    GetPathCommand
 )
 import os
 import csv
