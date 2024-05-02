@@ -1,14 +1,8 @@
-"""
-This module utilizes the command pattern - https://en.wikipedia.org/wiki/Command_pattern - to 
-specify and implement the business logic layer
-"""
 import sys
 from abc import ABC, abstractmethod
 from datetime import datetime
-from injector import Injector, inject
 import pytz
 
-import requests
 from django.db import transaction
 
 from projectapp.models import LearningPath
@@ -19,7 +13,8 @@ class Command(ABC):
     @abstractmethod
     def execute(self, data):
         raise NotImplementedError("A command must implement the execute method")
-    
+
+
 class PythonTimeStampProvider:
     def __init__(self):
         self.now = datetime.now(pytz.UTC).isoformat()
@@ -30,19 +25,18 @@ class AddPathCommand(Command):
     Adding a learning path
     """
 
-    @inject
-    def __init__(self, now: PythonTimeStampProvider = PythonTimeStampProvider()):
-        self.now = now
-
+    @transaction.atomic
     def execute(self, data: DomainLearningPath):
-        learningpath = LearningPath(data.id, data.title, data.duration)
+        learningpath = LearningPath.objects.create(
+            id=data.id,
+            title=data.title,
+            duration=data.duration
+        )
 
-        with transaction.atomic():
-            learningpath.save()
 
 class ListLearningPathCommand(Command):
     """
-    swapping in Django ORM for the database manager
+    Swapping in Django ORM for the database manager
     """
 
     def __init__(self, order_by="id"):
@@ -50,3 +44,35 @@ class ListLearningPathCommand(Command):
 
     def execute(self):
         return LearningPath.objects.all().order_by(self.order_by)
+    
+
+class SaveLearningPathProgressCommand(Command):
+    """
+    Command to save progress for a learning path
+    """
+
+    @transaction.atomic
+    def execute(self, data: DomainLearningPath, progress: int):
+        try:
+            learning_path = LearningPath.objects.get(id=data.id)
+        except LearningPath.DoesNotExist:
+            raise ValueError(f"Learning path with id {data.id} does not exist")
+
+        learning_path.progress = progress
+        learning_path.save()
+
+class ChangeLearningPathCommand(Command):
+    """
+    Command to change to a new learning path
+    """
+
+    @transaction.atomic
+    def execute(self, data: DomainLearningPath, new_title: str, new_duration: int):
+        try:
+            learning_path = LearningPath.objects.get(id=data.id)
+        except LearningPath.DoesNotExist:
+            raise ValueError(f"Learning path with id {data.id} does not exist")
+
+        learning_path.title = new_title
+        learning_path.duration = new_duration
+        learning_path.save()
