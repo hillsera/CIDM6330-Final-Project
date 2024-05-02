@@ -20,3 +20,5 @@ The tests in the "projectarch" directory shows these commands working as expecte
 ### Message Bus with Django Signals
 In the Barky Refactor 3 assignment, we used Django Signals to handle the internal messaging system to support an event-driven architecture. 
 Firstly, I had to specify the default app in the __init__.py file in the projectapp directory, and I set up the import signals to happen when the app is ready as outlined from Assignment 7.
+
+05/01 - I am getting an error for async_to_sync in my signals.py file, but the csv file is being created in the specified folder as expected.
