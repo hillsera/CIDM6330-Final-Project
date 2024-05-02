@@ -2,8 +2,10 @@ from django.db import transaction
 from django.test import TestCase
 from django.urls import reverse
 from django.utils.timezone import localtime
+from django.db.models.signals import post_save
 
 from projectapp.models import LearningPath
+from projectapp.signals import send_learning_path_to_channel, log_learning_path_to_csv
 from projectarch.domain.model import DomainLearningPath
 from projectarch.services.commands import (
     AddPathCommand,
@@ -14,6 +16,7 @@ from projectarch.services.commands import (
 import os
 import csv
 from unittest.mock import patch
+from pathlib import Path
 
 class TestCommands(TestCase):
     def setUp(self):
@@ -160,4 +163,33 @@ class TestDomainLearningPath(TestCase):
         # Check if the progress is updated correctly
         self.assertLessEqual(learning_path.progress, learning_path.duration)
 
+class TestLearningPathSignals(TestCase):
+    def setUp(self):
+        # Connect signal handlers to the post_save signal
+        post_save.connect(log_learning_path_to_csv, sender=LearningPath)
+        post_save.connect(send_learning_path_to_channel, sender=LearningPath)
+
+    def tearDown(self):
+        # Disconnect signal handlers
+        post_save.disconnect(log_learning_path_to_csv, sender=LearningPath)
+        post_save.disconnect(send_learning_path_to_channel, sender=LearningPath)
+
+    def test_signal_handlers(self):
+        # Create a LearningPath instance
+        learning_path = LearningPath.objects.create(
+            title="Test Learning Path",
+            duration=10,
+            progress=0
+        )
+
+        # Check if the CSV file is created and data is written to it
+        file_path = Path(__file__).parent.parent / "projectarch" / "domain" / "created_log.csv"
+        self.assertTrue(os.path.exists(file_path))
+
+        # Read the CSV file and check if the data is written correctly
+        with open(file_path, "r") as csvfile:
+            reader = csv.reader(csvfile)
+            rows = list(reader)
+            self.assertEqual(len(rows), 2)  # Expect header and one row of data
+            self.assertEqual(rows[1], [str(learning_path.id), learning_path.title, str(learning_path.duration), str(learning_path.progress)])
 
