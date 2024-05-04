@@ -2,6 +2,7 @@ import sys
 from abc import ABC, abstractmethod
 from datetime import datetime
 import pytz
+from injector import Injector, inject
 
 from django.db import transaction
 
@@ -25,13 +26,16 @@ class AddPathCommand(Command):
     Adding a learning path
     """
 
-    @transaction.atomic
-    def execute(self, data: DomainLearningPath):
-        learningpath = LearningPath.objects.create(
-            id=data.id,
-            title=data.title,
-            duration=data.duration
-        )
+    @inject
+    def __init__(self, now: PythonTimeStampProvider = PythonTimeStampProvider()):
+        self.now = now
+
+    def execute(self, data: DomainLearningPath, timestamp=None):
+        learningpath = LearningPath(data.id, data.title, data.duration, timestamp)
+        learningpath.timestamp = self.now
+
+        with transaction.atomic():
+            learningpath.save()
 
 
 class ListLearningPathCommand(Command):

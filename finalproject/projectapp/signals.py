@@ -43,7 +43,7 @@ def send_learning_path_to_channel(sender, instance, **kwargs):
     print(f"Sending learning path to channel: {instance}")
 
     async_to_sync(channel_layer.send)(
-        "learning-path-add", {"type": "print.learningpath", "data": instance.title}
+        "learningpath-add", {"type": "print.learningpath", "data": instance.title}
     )
 
 

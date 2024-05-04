@@ -11,16 +11,16 @@ from channels.generic.http import AsyncHttpConsumer
 from projectapp.models import LearningPath
 
 
-class SimpleBookmarkConsumer(AsyncConsumer):
-    async def print_bookmark(self, message):
+class SimpleLearningPathConsumer(AsyncConsumer):
+    async def print_learningpath(self, message):
         print(f"WORKER: LearningPath: {message['data']}")
 
 
 class LearningPathConsumer(AsyncHttpConsumer):
     async def handle(self, body):
-        # Get all bookmarks
+        # Get all learning paths
         learningpaths = LearningPath.objects.all()
-        # Serialize the bookmarks
+        # Serialize the learning paths
         data = json.dumps(
             [{"title": LearningPath.title, "url": LearningPath.url} for LearningPath in learningpaths]
         )
