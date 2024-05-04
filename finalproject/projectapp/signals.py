@@ -24,6 +24,11 @@ def log_learning_path_to_csv(sender, instance, **kwargs):
             logfile,
             delimiter=",",
         )
+        is_empty = csvfile.tell() == 0
+
+        if is_empty:
+            logwriter.writerow(['id', 'title', 'duration', 'progress'])
+
         logwriter.writerow(
             [
                 instance.id,
@@ -38,7 +43,7 @@ def send_learning_path_to_channel(sender, instance, **kwargs):
     print(f"Sending learning path to channel: {instance}")
 
     async_to_sync(channel_layer.send)(
-        "learning-path-add", {"type": "print.learningpath", "data": instance.url}
+        "learning-path-add", {"type": "print.learningpath", "data": instance.title}
     )
 
 

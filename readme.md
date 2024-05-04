@@ -22,3 +22,6 @@ In the Barky Refactor 3 assignment, we used Django Signals to handle the interna
 Firstly, I had to specify the default app in the __init__.py file in the projectapp directory, and I set up the import signals to happen when the app is ready as outlined from Assignment 7.
 
 05/01 - I am getting an error for async_to_sync in my signals.py file, but the csv file is being created in the specified folder as expected.
+05/03 I fixed this issue, turns out I didn't have everything set up properly and I was missing the "ID" field for my test_signal_handlers.
+
+### External Message Bus with Django Channels
