@@ -1,6 +1,11 @@
 # CIDM 6330 Final Project
 ## Sera Hill
 
+The tests for this project are in projectarch > tests and projectapp > tests. These are using Django's built-in testing functionality and can be run with the following commands:
+
+python manage.py test projectarch.tests
+python manage.py test projectapp.tests
+
 ### Selected Domain
 My selected domain for this project is a Learning Platform employers can provide to their employees so that employers can choose a learning path that let's them build new skills, or pursue paths that will help them in their current role.
 
