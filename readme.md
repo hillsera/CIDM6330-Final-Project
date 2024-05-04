@@ -3,7 +3,7 @@
 
 The tests for this project are in projectarch > tests and projectapp > tests. These are using Django's built-in testing functionality and can be run with the following commands:
 
-python manage.py test projectarch.tests
+python manage.py test projectarch.tests<br>
 python manage.py test projectapp.tests
 
 ### Selected Domain
